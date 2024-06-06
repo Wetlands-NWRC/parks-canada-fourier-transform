@@ -1,0 +1,9 @@
+name: pcft
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - geemap
+  - geopandas
+prefix: C:\Users\rhamilton\AppData\Local\miniconda3\envs\pcft

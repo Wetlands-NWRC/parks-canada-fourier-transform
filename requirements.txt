@@ -1,0 +1,6 @@
+geemap
+ipykernel
+geopandas
+geeft
+geersd
+matplotlib
