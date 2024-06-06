@@ -10,7 +10,7 @@ from pcft.plot import generate_plot
 
 
 # Settings
-AOI_FILENAME: str = 'users/ryangilberthamilton/ParksColab/PNP/pnp_aoi'
+AOI_FILENAME: str = '<YOUR AOI FILE HERE>'
 CLOUD = 1
 START_DATE = '2018'
 END_DATE = '2021'
