@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pcft"
-version = "0.2.0"
+version = "0.2.1"
 authors = [{ name = 'Ryan Hamilton', email = "ryan.hamilton@ec.gc.ca" }]
 
 [project.scripts]
