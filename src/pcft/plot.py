@@ -5,7 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def date_time_scatter_plot(df: gpd.GeoDataFrame | pd.DataFrame, cloud, min_year, max_year):
+def date_time_scatter_plot(
+    df: gpd.GeoDataFrame | pd.DataFrame, cloud, min_year, max_year
+):
     # Create a scatter plot
     fig, ax = plt.subplots()
     # Create a scatter plot on the axes
@@ -38,13 +40,15 @@ def _convert_ic_to_fc(dataset) -> pd.DataFrame:
     element_list = dataset.toList(dataset.size())
     elem2feat = element_list.map(_image2feature)
     fc = ee.FeatureCollection(elem2feat)
-    
-    gdf = gpd.GeoDataFrame.from_features(fc.getInfo()['features'])
-    return gdf[['year', 'doy']].astype(int)
+
+    gdf = gpd.GeoDataFrame.from_features(fc.getInfo()["features"])
+    return gdf[["year", "doy"]].astype(int)
 
 
 def generate_plot(filename: str, dataset, cloud, min_year, max_year) -> None:
     as_table = _convert_ic_to_fc(dataset)
-    plot = date_time_scatter_plot(as_table, cloud=cloud, min_year=min_year, max_year=max_year)
+    plot = date_time_scatter_plot(
+        as_table, cloud=cloud, min_year=min_year, max_year=max_year
+    )
     plot.savefig(filename)
     return None

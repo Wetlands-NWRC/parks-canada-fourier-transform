@@ -4,45 +4,37 @@ import ee
 
 import geeft
 
+from pcft.user_input import get_user_input
 from pcft.processing import process_s2, load_aoi
 from pcft.visualize import vizualize_map
 from pcft.plot import generate_plot
 
 
-# Settings
-AOI_FILENAME: str = '<YOUR AOI FILE HERE>'
-CLOUD = 1
-START_DATE = '2018'
-END_DATE = '2021'
-DEPENDENT: str = 'NDVI'
-MODES: int = 4
-
-
 def main():
-   
-    description = f'pcft_{AOI_FILENAME.split("/")[-1].split(".")[0]}_{CLOUD}'
-    aoi = load_aoi(AOI_FILENAME)
-    
+
+    user_input = get_user_input()
+    description = f'pcft_{user_input.aoi_file_name.split("/")[-1].split(".")[0]}_{user_input.cloud_percent}'
+    aoi = load_aoi(user_input.aoi_file_name)
+
     s2_proc = process_s2(
-       aoi=aoi,
-       dependent=DEPENDENT,
-       start=START_DATE,
-       end=END_DATE,
-       cloud=CLOUD
+        aoi=aoi,
+        dependent=user_input.dependent,
+        start=user_input.start_date,
+        end=user_input.end_date,
+        cloud=user_input.cloud_percent,
     )
 
     generate_plot(
         filename=f"{description}.png",
         dataset=s2_proc,
-        cloud=CLOUD, 
-        min_year=START_DATE,
-        max_year=END_DATE
+        cloud=user_input.cloud_percent,
+        min_year=user_input.start_date,
+        max_year=user_input.end_date,
     )
-    
-    ft = geeft.compute(s2_proc, DEPENDENT, MODES)
+
+    ft = geeft.compute(s2_proc, user_input.dependent, user_input.modes)
     vizualize_map(ft.clip(aoi), None, aoi)
     # folder name = pcft_base_name of the aoi + cloud percent
-    description = f'pcft_{AOI_FILENAME.split("/")[-1].split(".")[0]}_{CLOUD}'
 
     task = ee.batch.Export.image.toDrive(
         image=ft.clip(aoi),
@@ -53,19 +45,20 @@ def main():
         scale=10,
         crs="EPSG:4326",
         region=aoi,
-        skipEmptyTiles=True
+        skipEmptyTiles=True,
     )
 
-    start_task = input("start export task? [Y/n]")
-    
-    if start_task.lower() != 'n':
+    start_task = input("start export task? [Y/n]: ")
+
+    if start_task.lower().strip() == "n":
         sys.exit(1)
-    
+
     task.start()
     print(f"Task: {task.id}")
     print(f"earthengine task info {task.id}")
     sys.exit(0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     ee.Initialize()
     main()
