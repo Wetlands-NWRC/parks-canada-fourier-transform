@@ -31,8 +31,8 @@ python -m pip install -e .
 
 # usage
 ```bash
-# run the script
-python -m pcft
+# run the script, follow on screen instructions
+(pcft) $ pcft
 ```
 
 # update settings in __main__.py
