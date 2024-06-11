@@ -4,7 +4,7 @@ project for exploratory analysis for fourier transform
 # Setup
 ```bash
 # create the base environment
-conda env create -f environment.yml
+conda create -n pcft -c conda-forge geemap geopandas
 ```
 
 ```bash
@@ -13,26 +13,29 @@ conda activate pcft
 ```
 
 # IMPORTANT: THESE PACKAGES ARE NOT YET AVAILABLE ON PYPI OR CONDA FORGE
-# YOU WILL NEED TO INSTALL THEM MANUALLY FROM GITHUB REPOS
-```bash
-# install the remote sensing datasets library
-pip install git+https://github.com/Wetlands-NWRC/geersd.git
-```
 
+Install the Fouirer Transfrom lib from source
 ```bash
-# install fourer transform package
 pip install git+https://github.com/Wetlands-NWRC/geeft.git
 ```
 
-build the project
+build from source
 ```bash
-python -m pip install -e .
+python git+https://github.com/Wetlands-NWRC/parks-canada-fourier-transform.git
 ```
 
 # usage
 ```bash
 # run the script, follow on screen instructions
 (pcft) $ pcft
+```
+
+# install in dev mode
+clone this repo
+
+then run this command from the root of the repo
+```bash
+python -m pip install -e .
 ```
 
 # update settings in __main__.py
