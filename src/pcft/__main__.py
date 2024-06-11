@@ -5,7 +5,7 @@ import ee
 import geeft
 
 from pcft.user_input import get_user_input
-from pcft.processing import process_s2, load_aoi
+from pcft.processing import process_l8, load_aoi
 from pcft.visualize import vizualize_map
 from pcft.plot import generate_plot
 
@@ -16,7 +16,7 @@ def main():
     description = f'pcft_{user_input.aoi_file_name.split("/")[-1].split(".")[0]}_{user_input.cloud_percent}'
     aoi = load_aoi(user_input.aoi_file_name)
 
-    s2_proc = process_s2(
+    l8_proc = process_l8(
         aoi=aoi,
         dependent=user_input.dependent,
         start=user_input.start_date,
@@ -26,13 +26,13 @@ def main():
 
     generate_plot(
         filename=f"{description}.png",
-        dataset=s2_proc,
+        dataset=l8_proc,
         cloud=user_input.cloud_percent,
         min_year=user_input.start_date,
         max_year=user_input.end_date,
     )
 
-    ft = geeft.compute(s2_proc, user_input.dependent, user_input.modes)
+    ft = geeft.compute(l8_proc, user_input.dependent, user_input.modes)
     vizualize_map(ft.clip(aoi), None, aoi)
     # folder name = pcft_base_name of the aoi + cloud percent
 
