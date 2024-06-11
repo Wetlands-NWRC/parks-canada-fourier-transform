@@ -71,7 +71,6 @@ def _load_ee_asset(filename: str) -> ee.FeatureCollection:
 
 
 def load_aoi(filename: str) -> ee.Geometry:
-
     if filename.endswith(".shp"):
         table = _load_shapefile(filename)
         return ee.FeatureCollection(table.__geo_interface__).geometry()
@@ -102,7 +101,7 @@ def process_l8(aoi: ee.Geometry, dependent: str, start: str, end: str, cloud: in
         dataset = dataset.applyCloudMask()
 
     if index is not None:
-        dataset = dataset.map(index('SR_B5', 'SR_B4'))
+        dataset = dataset.map(index("SR_B5", "SR_B4"))
 
     return dataset
 
@@ -111,8 +110,7 @@ def process_s2(aoi: ee.Geometry, dependent: str, start: str, end: str, cloud: in
     index = get_index(dependent)
 
     dataset = (
-        Sentinel2
-        .surface_reflectance()
+        Sentinel2.surface_reflectance()
         .filterBounds(aoi)
         .filterDate(start, end)
         .filterCloud(cloud)
@@ -124,15 +122,15 @@ def process_s2(aoi: ee.Geometry, dependent: str, start: str, end: str, cloud: in
         dataset = dataset.applyCloudMask()
 
     if index is not None:
-        dataset = dataset.map(index('B8', 'B4'))
+        dataset = dataset.map(index("B8", "B4"))
 
     return dataset
 
 
 def fetch_processor(sensor: str):
     factory = {
-        'ls': process_l8,
-        's2': process_s2,
+        "ls": process_l8,
+        "s2": process_s2,
     }
-    
+
     return factory.get(sensor, None)

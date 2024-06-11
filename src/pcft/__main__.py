@@ -11,7 +11,6 @@ from pcft.plot import generate_plot
 
 
 def main():
-
     user_input = get_user_input()
     description = f'pcft_{user_input.sensor_type}_{user_input.aoi_file_name.split("/")[-1].split(".")[0]}_{user_input.cloud_percent:.0f}'
     aoi = load_aoi(user_input.aoi_file_name)
@@ -21,7 +20,7 @@ def main():
         dependent=user_input.dependent,
         start=user_input.start_date,
         end=user_input.end_date,
-        cloud=user_input.cloud_percent
+        cloud=user_input.cloud_percent,
     )
 
     generate_plot(
