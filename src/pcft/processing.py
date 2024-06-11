@@ -3,6 +3,8 @@ from typing import Callable, Dict, Any
 import ee
 import geopandas as gpd
 
+from geersd import Sentinel2
+
 
 class Lansat8Sr(ee.ImageCollection):
     def __init__(self):
@@ -35,11 +37,11 @@ class Lansat8Sr(ee.ImageCollection):
         )
 
 
-def _add_ndvi(image):
-    return image.addBands(
+def _add_ndvi(nir: str, red: str):
+    return lambda image: image.addBands(
         image.expression(
             expression="(NIR - Red) / (NIR + Red)",
-            map_={"NIR": image.select("SR_B5"), "Red": image.select("SR_B4")},
+            map_={"NIR": image.select(nir), "Red": image.select(red)},
         )
         .rename("NDVI")
         .float()
@@ -100,6 +102,37 @@ def process_l8(aoi: ee.Geometry, dependent: str, start: str, end: str, cloud: in
         dataset = dataset.applyCloudMask()
 
     if index is not None:
-        dataset = dataset.map(index)
+        dataset = dataset.map(index('SR_B5', 'SR_B4'))
 
     return dataset
+
+
+def process_s2(aoi: ee.Geometry, dependent: str, start: str, end: str, cloud: int):
+    index = get_index(dependent)
+
+    dataset = (
+        Sentinel2
+        .surface_reflectance()
+        .filterBounds(aoi)
+        .filterDate(start, end)
+        .filterCloud(cloud)
+        .map(insert_dt_props)
+    )
+
+    # if cloud greater than one
+    if cloud > 1:
+        dataset = dataset.applyCloudMask()
+
+    if index is not None:
+        dataset = dataset.map(index('B8', 'B4'))
+
+    return dataset
+
+
+def fetch_processor(sensor: str):
+    factory = {
+        'ls': process_l8,
+        's2': process_s2,
+    }
+    
+    return factory.get(sensor, None)
