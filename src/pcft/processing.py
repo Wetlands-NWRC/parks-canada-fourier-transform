@@ -1,9 +1,11 @@
 from typing import Callable, Dict, Any
 
 import ee
-import geopandas as gpd
 
 from geersd import Sentinel2
+
+
+from pcft.vector_operations import load_ee_asset, shp2fc
 
 
 class Lansat8Sr(ee.ImageCollection):
@@ -54,27 +56,10 @@ def get_index(key: str) -> Callable | None:
     return index_factory.get(key.lower(), None)
 
 
-def _load_shapefile(filename: str):
-    gdf = gpd.read_file(filename, driver="ESRI Shapefile")
-
-    if len(gdf) > 1:
-        gdf = gdf.iloc[[0]]
-
-    if gdf.crs != 4326:
-        gdf.to_crs(4326, inplace=True)
-
-    return gdf
-
-
-def _load_ee_asset(filename: str) -> ee.FeatureCollection:
-    return ee.FeatureCollection(filename)
-
-
 def load_aoi(filename: str) -> ee.Geometry:
     if filename.endswith(".shp"):
-        table = _load_shapefile(filename)
-        return ee.FeatureCollection(table.__geo_interface__).geometry()
-    return _load_ee_asset(filename).geometry()
+        return shp2fc(filename)
+    return load_ee_asset(filename).geometry()
 
 
 def insert_dt_props(x) -> ee.Image:
