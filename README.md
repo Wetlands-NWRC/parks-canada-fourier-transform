@@ -4,7 +4,7 @@ project for exploratory analysis for fourier transform
 # Setup
 ```bash
 # create the base environment
-conda create -n pcft -c conda-forge geemap geopandas
+conda create -n pcft -c conda-forge geemap geopandas matplotlib -y
 ```
 
 ```bash
