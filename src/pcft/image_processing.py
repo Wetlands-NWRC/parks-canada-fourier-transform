@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Any
+from typing import Callable
 import functools
 
 import ee
@@ -30,34 +30,40 @@ def get_index(key: str) -> Callable | None:
     return index_factory.get(key.lower(), None)
 
 
-def process_colllection(dataset, aoi, start, end, dependent, cloud = -1):
+def process_colllection(dataset, aoi, start, end, dependent, cloud=-1):
     dataset = dataset.filterBounds(aoi).filterDate(start, end).map(insert_dt_props)
-    index = get_index(dependent) # if returns none assume that we are using a spectral band
+    index = get_index(
+        dependent
+    )  # if returns none assume that we are using a spectral band
 
     if cloud > -1:
         dataset = dataset.filterClouds(cloud)
-    
-    if hasattr(dataset, 'applySaclingFactor'):
+
+    if hasattr(dataset, "applySaclingFactor"):
         dataset = dataset.applyScalingFactor()
-    
+
     dataset = dataset.applyCloudMask()
-    
-    if hasattr(dataset, 'rename'):
-        dataset = dataset.rename() # handle the standardization of the bands for landsat only
-    
-    if index is not None and isinstance(dataset, landsat.LandsatSR): # TODO check this logic
-        dataset = dataset.map(_add_ndvi('SR_B5', 'SR_B4'))
+
+    if hasattr(dataset, "rename"):
+        dataset = (
+            dataset.rename()
+        )  # handle the standardization of the bands for landsat only
+
+    if index is not None and isinstance(
+        dataset, landsat.LandsatSR
+    ):  # TODO check this logic
+        dataset = dataset.map(_add_ndvi("SR_B5", "SR_B4"))
     else:
-        dataset = dataset.map(_add_ndvi('B8', 'B4'))
+        dataset = dataset.map(_add_ndvi("B8", "B4"))
 
     return dataset.select(dependent)
 
 
 def fetch_proc(sensor: str):
     factory = {
-        'l8': functools.partial(process_colllection, landsat.Landsat8SR()),
-        'l5': functools.partial(process_colllection, landsat.Landsat5SR()),
-        'l7': functools.partial(process_colllection, landsat.Landsat7SR()),
-        's2': functools.partial(process_colllection, Sentinel2.surface_reflectance())
+        "l8": functools.partial(process_colllection, landsat.Landsat8SR()),
+        "l5": functools.partial(process_colllection, landsat.Landsat5SR()),
+        "l7": functools.partial(process_colllection, landsat.Landsat7SR()),
+        "s2": functools.partial(process_colllection, Sentinel2.surface_reflectance()),
     }
     return factory[sensor]
