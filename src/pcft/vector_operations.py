@@ -27,4 +27,4 @@ def load_ee_asset(filename: str) -> ee.FeatureCollection:
 def load_aoi(filename: str) -> ee.Geometry:
     if filename.endswith(".shp"):
         return shp2fc(filename)
-    return load_ee_asset(filename).geometry()
+    return load_ee_asset(filename)
