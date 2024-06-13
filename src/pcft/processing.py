@@ -5,7 +5,7 @@ from pcft.image_processing import fetch_proc
 def process_landsat_time_series(aoi, start, end, dependent, cloud=-1):
     aoi = load_aoi(aoi)
     include_l5 = int(start) < 2012
-    include_l8 = int(end) >= 2013 
+    include_l8 = int(end) >= 2013
 
     dataset = None
     if include_l5:
@@ -14,7 +14,7 @@ def process_landsat_time_series(aoi, start, end, dependent, cloud=-1):
 
     if include_l8:
         l8 = fetch_proc("l8")(aoi, start, end, dependent, cloud)
-        
+
         if dataset is not None:
             dataset = dataset.merge(l8)
         else:
@@ -25,4 +25,9 @@ def process_landsat_time_series(aoi, start, end, dependent, cloud=-1):
 
 def process_sentinel2_time_series(aoi, start, end, dependent, cloud=-1):
     aoi = load_aoi(aoi)
-    return fetch_proc["s2"](aoi, start, end, dependent, cloud)
+    return fetch_proc("s2")(aoi, start, end, dependent, cloud)
+
+
+def fetch_time_series(type: str):
+    factory = {"ls": process_landsat_time_series, "s2": process_sentinel2_time_series}
+    return factory[type]

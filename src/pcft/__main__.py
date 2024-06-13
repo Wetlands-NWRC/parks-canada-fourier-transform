@@ -5,7 +5,8 @@ import ee
 import geeft
 
 from pcft.user_input import get_user_input
-from pcft.processing import fetch_processor, load_aoi
+from pcft.processing import fetch_time_series
+from pcft.vector_operations import load_aoi
 from pcft.visualize import vizualize_map
 from pcft.plot import generate_plot
 
@@ -15,8 +16,8 @@ def main():
     description = f'pcft_{user_input.sensor_type}_{user_input.aoi_file_name.split("/")[-1].split(".")[0]}_{user_input.cloud_percent:.0f}'
     aoi = load_aoi(user_input.aoi_file_name)
 
-    processor = fetch_processor(user_input.sensor_type)(
-        aoi=aoi,
+    processor = fetch_time_series(user_input.sensor_type)(
+        aoi=user_input.aoi_file_name,
         dependent=user_input.dependent,
         start=user_input.start_date,
         end=user_input.end_date,

@@ -20,13 +20,12 @@ class LandsatSR(ee.ImageCollection):
 
     def applyScalingFactor(self):
         return self.map(self.scaling_factors)
-    
+
     def rename(self):
         """renames bands to match land sat 8"""
         old_names = ["SR_B1", "SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B7"]
         new_name = ["SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B6", "SR_B7"]
         return self.select(old_names, new_name)
-
 
     @staticmethod
     def cloud_mask(image):
@@ -34,30 +33,36 @@ class LandsatSR(ee.ImageCollection):
         qaMask = image.select("QA_PIXEL").bitwiseAnd(int("11111", 2)).eq(0)
         saturationMask = image.select("QA_RADSAT").eq(0)
 
-        return image.set({'cloud_mask': 1}).updateMask(qaMask).updateMask(saturationMask)
+        return (
+            image.set({"cloud_mask": 1}).updateMask(qaMask).updateMask(saturationMask)
+        )
 
     @staticmethod
     def scaling_factors(image: ee.Image):
         optical_bands = image.select("SR_B.").multiply(0.0000275).add(-0.2)
         thermal_bands = image.select("ST_B6").multiply(0.00341802).add(149.0)
-        return image.set({'scaling_factor': 1}).addBands(optical_bands, None, True).addBands(
-            thermal_bands, None, True
+        return (
+            image.set({"scaling_factor": 1})
+            .addBands(optical_bands, None, True)
+            .addBands(thermal_bands, None, True)
         )
 
 
 class Landsat8SR(LandsatSR):
     def __init__(self):
         super().__init__("LANDSAT/LC08/C02/T1_L2")
-    
+
     def rename(self):
-        return self.select('SR_B[2-7]')
+        return self.select("SR_B[2-7]")
 
     @staticmethod
     def scaling_factors(image: ee.Image):
         optical_bands = image.select("SR_B.").multiply(0.0000275).add(-0.2)
         thermal_bands = image.select("ST_B.*").multiply(0.00341802).add(149.0)
-        return image.set({'scaling_factor': 1}).addBands(optical_bands, None, True).addBands(
-            thermal_bands, None, True
+        return (
+            image.set({"scaling_factor": 1})
+            .addBands(optical_bands, None, True)
+            .addBands(thermal_bands, None, True)
         )
 
 

@@ -37,7 +37,10 @@ def process_colllection(dataset, aoi, start, end, dependent, cloud=-1):
     )  # if returns none assume that we are using a spectral band
 
     if cloud > -1:
-        dataset = dataset.filterClouds(cloud)
+        if hasattr(dataset, "filterCloud"):  # to statisfy symantic dif in S2 class
+            dataset = dataset.filterCloud(cloud)
+        else:
+            dataset = dataset.filterClouds(cloud)
 
     if hasattr(dataset, "applyScalingFactor"):
         dataset = dataset.applyScalingFactor()
