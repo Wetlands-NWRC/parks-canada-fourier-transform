@@ -39,7 +39,7 @@ def process_colllection(dataset, aoi, start, end, dependent, cloud=-1):
     if cloud > -1:
         dataset = dataset.filterClouds(cloud)
 
-    if hasattr(dataset, "applySaclingFactor"):
+    if hasattr(dataset, "applyScalingFactor"):
         dataset = dataset.applyScalingFactor()
 
     dataset = dataset.applyCloudMask()

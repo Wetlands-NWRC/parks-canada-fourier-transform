@@ -4,8 +4,8 @@ from pcft.image_processing import fetch_proc
 
 def process_landsat_time_series(aoi, start, end, dependent, cloud=-1):
     aoi = load_aoi(aoi)
-    include_l5 = True if start >= 1984 else False
-    include_l8 = True if end >= 2013 else False
+    include_l5 = start >= 1984
+    include_l8 = end >= 2013 
 
     dataset = None
     if include_l5:
