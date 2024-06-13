@@ -22,3 +22,9 @@ def shp2fc(filename: str) -> ee.Geometry:
 def load_ee_asset(filename: str) -> ee.FeatureCollection:
     """loads the asset and grabs the geometry of the first feature"""
     return ee.FeatureCollection(filename).first().geometry()
+
+def load_aoi(filename: str) -> ee.Geometry:
+    if filename.endswith(".shp"):
+        return shp2fc(filename)
+    return load_ee_asset(filename).geometry()
+
