@@ -2,13 +2,12 @@ import sys
 
 import ee
 
-import geeft
-
-from pcft.user_input import get_user_input
+from pcft import geeft
+from pcft.plot import generate_plot
 from pcft.processing import fetch_time_series
+from pcft.user_input import get_user_input
 from pcft.vector_operations import load_aoi
 from pcft.visualize import vizualize_map
-from pcft.plot import generate_plot
 
 
 def main():

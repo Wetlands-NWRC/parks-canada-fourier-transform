@@ -1,7 +1,6 @@
 from pcft import processing as proc
 
 
-
 asset_id = "users/ryangilberthamilton/bq-trend-analysis/subset_BoQ_for_Ken_v2"
 
 
