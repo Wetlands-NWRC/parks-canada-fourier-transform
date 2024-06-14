@@ -4,8 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pcft"
-version = "0.2.2"
+version = "0.2.3"
 authors = [{ name = 'Ryan Hamilton', email = "ryan.hamilton@ec.gc.ca" }]
+dependencies = ["earthengine-api", "geopandas", "matplotlib"]
 
 [project.scripts]
 pcft = 'pcft.__main__:main'
