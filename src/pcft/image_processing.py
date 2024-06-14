@@ -2,7 +2,7 @@ from typing import Callable
 import functools
 
 import ee
-from geersd import Sentinel2
+from pcft import sentinel
 from pcft import landsat
 
 
@@ -67,6 +67,6 @@ def fetch_proc(sensor: str):
         "l8": functools.partial(process_colllection, landsat.Landsat8SR()),
         "l5": functools.partial(process_colllection, landsat.Landsat5SR()),
         "l7": functools.partial(process_colllection, landsat.Landsat7SR()),
-        "s2": functools.partial(process_colllection, Sentinel2.surface_reflectance()),
+        "s2": functools.partial(process_colllection, sentinel.Sentinel2SR()),
     }
     return factory[sensor]
