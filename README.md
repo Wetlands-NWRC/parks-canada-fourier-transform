@@ -12,14 +12,7 @@ conda create -n pcft -c conda-forge geemap geopandas matplotlib -y
 conda activate pcft
 ```
 
-# IMPORTANT: THESE PACKAGES ARE NOT YET AVAILABLE ON PYPI OR CONDA FORGE
-
-Install the Fouirer Transfrom lib from source
-```bash
-pip install git+https://github.com/Wetlands-NWRC/geeft.git
-```
-
-build from source
+install from source
 ```bash
 python git+https://github.com/Wetlands-NWRC/parks-canada-fourier-transform.git
 ```
